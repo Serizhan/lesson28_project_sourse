@@ -4,10 +4,13 @@ from django.core.paginator import Paginator
 from django.http import JsonResponse
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
-from django.views.generic import ListView, DetailView, UpdateView, CreateView, DeleteView
+from django.views.generic import ListView, DetailView, UpdateView, DeleteView
+from rest_framework.generics import CreateAPIView
+from rest_framework.viewsets import ModelViewSet
 
 from avito import settings
 from users.models import User, Location
+from users.serializers import UserCreateSerializer, LocationSerializer
 
 
 class UserListView(ListView):
@@ -95,35 +98,40 @@ class UserUpdateView(UpdateView):
         })
 
 
-@method_decorator(csrf_exempt, name="dispatch")
-class UserCreateView(CreateView):
-    model = User
-    fields = ["username"]
+# @method_decorator(csrf_exempt, name="dispatch")
+# class UserCreateView(CreateView):
+#     model = User
+#     fields = ["username"]
+#
+#     def post(self, request, *args, **kwargs):
+#         user_data = json.loads(request.body)
+#         user = User.objects.create(
+#             username=user_data['username'],
+#             first_name=user_data['first_name'],
+#             last_name=user_data['last_name'],
+#             role=user_data['role'],
+#             age=user_data['age'],
+#         )
+#
+#         if 'locations' in user_data:
+#             for loc_name in user_data["locations"]:
+#                 loc, _ = Location.objects.get_or_create(name=loc_name)
+#                 user.location.add(loc)
+#
+#         return JsonResponse({
+#             "id": user.id,
+#             "first_name": user.first_name,
+#             "last_name": user.last_name,
+#             "username": user.username,
+#             "role": user.role,
+#             "age": user.age,
+#             "locations": list(map(str, user.location.all())),
+#         })
 
-    def post(self, request, *args, **kwargs):
-        user_data = json.loads(request.body)
-        user = User.objects.create(
-            username=user_data['username'],
-            first_name=user_data['first_name'],
-            last_name=user_data['last_name'],
-            role=user_data['role'],
-            age=user_data['age'],
-        )
 
-        if 'locations' in user_data:
-            for loc_name in user_data["locations"]:
-                loc, _ = Location.objects.get_or_create(name=loc_name)
-                user.location.add(loc)
-
-        return JsonResponse({
-            "id": user.id,
-            "first_name": user.first_name,
-            "last_name": user.last_name,
-            "username": user.username,
-            "role": user.role,
-            "age": user.age,
-            "locations": list(map(str, user.location.all())),
-        })
+class UserCreateView(CreateAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserCreateSerializer
 
 
 @method_decorator(csrf_exempt, name="dispatch")
@@ -135,3 +143,8 @@ class UserDeleteView(DeleteView):
         super().delete(request, *args, **kwargs)
 
         return JsonResponse({"status": "ok"}, status=200)
+
+
+class LocationViewSet(ModelViewSet):
+    queryset = Location.objects.all()
+    serializer_class = LocationSerializer
