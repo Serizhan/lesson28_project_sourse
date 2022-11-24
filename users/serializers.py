@@ -31,3 +31,34 @@ class LocationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Location
         fields = '__all__'
+
+
+class UserListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = '__all__'
+
+
+class UserDestroySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ["id"]
+
+
+class UserUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        exclude = ["id", "role", "location"]
+
+
+class UserRetrieveSerializer(serializers.ModelSerializer):
+    location = serializers.SlugRelatedField(
+        queryset=Location.objects.all(),
+        many=True,
+        slug_field="name",
+        required=False,
+    )
+
+    class Meta:
+        model = User
+        fields = '__all__'
