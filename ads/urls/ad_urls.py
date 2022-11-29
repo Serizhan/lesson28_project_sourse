@@ -5,7 +5,7 @@ from ads import views
 
 
 urlpatterns = [
-    path('', views.AdListView.as_view()),
+    # path('', views.AdListView.as_view()),
     # path('<int:pk>', views.AdDetailView.as_view()),
     # path('<int:pk>/update', views.AdUpdateView.as_view()),
     # path('<int:pk>/delete', views.VacancyDestroyView.as_view()),

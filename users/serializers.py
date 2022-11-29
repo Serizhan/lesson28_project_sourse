@@ -20,6 +20,8 @@ class UserCreateSerializer(serializers.ModelSerializer):
         for loc_name in self._locations:
             location, _ = Location.objects.get_or_create(name=loc_name)
             user.location.add(location)
+        user.set_password(validated_data['password'])
+        user.save()
         return user
 
     class Meta:

@@ -19,7 +19,7 @@ from django.urls import path, include
 from rest_framework import routers
 
 from ads import views
-from ads.views import AdViewSet
+from ads.views import *
 from avito import settings
 
 from users.views import LocationViewSet
@@ -27,6 +27,8 @@ from users.views import LocationViewSet
 router = routers.SimpleRouter()
 router.register('location', LocationViewSet)
 router.register('ad', AdViewSet)
+router.register('selection', SelectionViewSet)
+router.register('cat', CategoryViewSet)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
