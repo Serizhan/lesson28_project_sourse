@@ -1,4 +1,5 @@
 from rest_framework.generics import *
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.viewsets import ModelViewSet
 from users.serializers import *
 
@@ -16,6 +17,7 @@ class UserRetrieveView(RetrieveAPIView):
 class UserUpdateView(UpdateAPIView):
     queryset = User.objects.all()
     serializer_class = UserUpdateSerializer
+    permission_classes = [IsAuthenticated]
 
 
 class UserCreateView(CreateAPIView):
